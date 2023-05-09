@@ -17,7 +17,7 @@ def getSubstrings(seq, length=100):  # returns the list of subsequences of the g
 # OVERLAP
 def overlap(s1, s2):
     over = ''
-    for i in range(3,len(s1) + 1):  # at least the first 3 characters must be equal so there is not point in checking below that
+    for i in range(3,min(len(s1),len(s2)) + 1):  # at least the first 3 characters must be equal so there is not point in checking below that
         if s1[-i:] != s2[:i]:  # if the suffix of s2 is not the same as the prefix of s1
             pass  # go on looking
         else:  # when subsequence coincide --> overlapping sequence
@@ -25,7 +25,7 @@ def overlap(s1, s2):
     return over
 
 
-#CHOOSE PAIR
+#CHOOSE PAIR among equal overlap length once
 def maxPair(l):
     if len(l) == 1:  # only one pair with max overlap length
         p = l[0]  # extract the only pair from the list
@@ -35,9 +35,14 @@ def maxPair(l):
 
 #MERGE
 def merge(l): #merge all elements in a list one after the other
-    merge = ''
-    for i in l:
-        merge += i  # merge all remaining sequences together
+    p=[]
+    merge=''
+    for merge_per in itertools.permutations(l,len(l)): #create all possible permutations of remianing non overlappin sequences
+        p.append(list(merge_per))
+
+    # among all possible permutations of the non overlapping seuqences stored in p list i pick one randomly and merge it
+    for i in random.choice(p):
+        merge += i  # merge all sequences of the permutation together in order left-right
     return merge  # return merged sequence
 
 
@@ -47,7 +52,7 @@ def SCS(l):  #l is the list of subsequences
     if len(l) == 1: #only one seq in the list
         return l[0]
     else: #more than one seq in the list
-        l_max = 0  # var for the max length of the computed overlap
+        l_max = 0  # var for the max length of the computed overlap=shortest sequence
         max_pairs = []
         for pair in itertools.permutations(l, 2): #iter over each pair
             o = overlap(pair[0], pair[1])  # compute overlap of 1st seq suffix and 2nd seq prefix of the pair --> function defined above
@@ -67,21 +72,22 @@ def SCS(l):  #l is the list of subsequences
         if o_max: #if we have an overlap in the seq
             l.remove(suf)
             l.remove(pre)  # removing the 2 substrings from the original list
-            merge = suf[:-l_max] + o_max + pre[l_max:]  # merge the 2 strings
-            l.append(merge)  # append the merged string to the list of subsequences
+            mer = suf[:-l_max] + o_max + pre[l_max:]  # merge the 2 strings
+            l.append(mer)  # append the merged string to the list of subsequences
             #print(l)
             #print(l[0])
             return SCS(l) #recursive call
 
         else: #if no pair combination overlaps
-            m = merge(l) #function defined above
-            return m
+            return merge(l) #function defined above
 
-
-if __name__ == "__main__": #main
-    DNA = getGenome(15)
-    subseq = getSubstrings(DNA, 6)
-    print(DNA)
+#MAIN
+if __name__ == "__main__":
+    #DNA = getGenome(15)
+    #subseq = getSubstrings(DNA, 6)
+    subseq=['AGCAGACACAAGG','GGTACCAGGTA']
+    #print(DNA)
     print(subseq)
     scs=SCS(subseq)
     print(scs)
+

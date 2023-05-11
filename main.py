@@ -37,7 +37,7 @@ def maxPair(l):
 def merge(l): #merge all elements in a list one after the other
     p=[]
     merge=''
-    for merge_per in itertools.permutations(l,len(l)): #create all possible permutations of remianing non overlappin sequences
+    for merge_per in itertools.permutations(l,len(l)): #create all possible permutations of remianing non overlapping sequences
         p.append(list(merge_per))
 
     # among all possible permutations of the non overlapping seuqences stored in p list i pick one randomly and merge it
@@ -74,8 +74,6 @@ def SCS(l):  #l is the list of subsequences
             l.remove(pre)  # removing the 2 substrings from the original list
             mer = suf[:-l_max] + o_max + pre[l_max:]  # merge the 2 strings
             l.append(mer)  # append the merged string to the list of subsequences
-            #print(l)
-            #print(l[0])
             return SCS(l) #recursive call
 
         else: #if no pair combination overlaps
@@ -83,10 +81,9 @@ def SCS(l):  #l is the list of subsequences
 
 #MAIN
 if __name__ == "__main__":
-    #DNA = getGenome(15)
-    #subseq = getSubstrings(DNA, 6)
-    subseq=['AGCAGACACAAGG','GGTACCAGGTA']
-    #print(DNA)
+    DNA = getGenome(15)
+    subseq = getSubstrings(DNA, 6)
+    #subseq = ['ATCGGA', 'TACCCA', 'AGCTAC', 'CGGATT', 'TTGCTA']
     print(subseq)
     scs=SCS(subseq)
     print(scs)
